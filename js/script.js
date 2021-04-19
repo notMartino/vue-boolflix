@@ -9,7 +9,8 @@ function martinosflix() {
             search: '',
             filmList: [],
             serieList: [],
-            api_key: '159bee94cc034456f8348926b952865b'
+            api_key: '159bee94cc034456f8348926b952865b',
+            starClass: '',
         },
         methods: {
             searchFilm: function () {
@@ -24,12 +25,11 @@ function martinosflix() {
                                 query: this.search
                             }
                         }).then(data => {
-                        console.log(data);
-                        this.filmList = data.data.results
-                        this.flagSrc 
-
-                    }).catch(() => {
-                        console.log('Error');
+                                console.log('Films: ', data.data.results);
+                                this.filmList = data.data.results
+                                this.flagSrc 
+                        }).catch(() => {
+                            console.log('Error');
                     });
 
                     // API ricerca serie per nome
@@ -40,12 +40,12 @@ function martinosflix() {
                                 query: this.search
                             }
                         }).then(data => {
-                        console.log(data);
-                        this.serieList = data.data.results
-                        this.flagSrc 
-                    }).catch(() => {
-                        console.log('Error');
-                    })
+                                console.log('Serie TV: ', data.data.results);
+                                this.serieList = data.data.results
+                                this.flagSrc 
+                        }).catch(() => {
+                            console.log('Error');
+                    });
                     // axios.get('https://api.themoviedb.org/3/search/movie?api_key=159bee94cc034456f8348926b952865b&query=' + this.search).then(data => {
                     //     console.log(data.data.results);
                     //     this.filmList = data.data.results
@@ -55,6 +55,19 @@ function martinosflix() {
                     //     console.log('Error');
                     // })
                 }
+            },
+            starRating: function (film, index) {
+                let stars = film.vote_average;
+                let rating = Math.round((5 * stars) / 10);
+                let iconClass = '';
+
+                if(rating <= index) {
+                    iconClass = 'far fa-star';
+                }else{
+                    iconClass = 'fas fa-star';
+                }
+
+                return iconClass;
             }
         }
     });

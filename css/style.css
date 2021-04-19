@@ -41,11 +41,17 @@ header h1{
 /* Film box */
 .filmBox{
     width: 200px;
-    height: 200px;
     margin: 0 30px 20px 0;
     padding: 10px;
+}
+.filmBox ul{
     background-color: grey;
 }
+
+.filmBox .cover{
+    width: 100%;
+}
+
 .filmBox .flag{
     width: 20px;
     height: 20px;
@@ -54,4 +60,8 @@ header h1{
 }
 .filmBox .language{
     vertical-align: middle;
+}
+
+.filmBox .rating li{
+    display: inline-block;
 }

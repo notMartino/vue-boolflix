@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Martino's Flix</title>
 
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/2e0cc00556.js" crossorigin="anonymous"></script>
+
     <!-- Vue -->
     <script src="js/vue.js"></script>
     <!-- Axios -->
@@ -30,6 +33,9 @@
             <div v-for="film in filmList" class="filmBox">
                 <ul>
                     <li>
+                        <img class="cover" :src="'https://image.tmdb.org/t/p/w342/' + film.poster_path" alt="Cover film">
+                    </li>
+                    <li>
                         <h2>
                             {{film.title}}
                         </h2>
@@ -48,12 +54,20 @@
                     </li>
                     <li>
                         Voto medio: {{film.vote_average}}
+                        <ul class="rating">
+                            <li v-for="(star, index) in 5">
+                                <i :class="starRating(film, index)"></i>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
 
             <div v-for="serie in serieList" class="filmBox">
                 <ul>
+                    <li>
+
+                    </li>
                     <li>
                         <h2>
                             {{serie.name}}
@@ -73,6 +87,11 @@
                     </li>
                     <li>
                         Voto medio: {{serie.vote_average}}
+                        <ul class="rating">
+                            <li v-for="(star, index) in 5">
+                                <i :class="starRating(serie, index)"></i>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
