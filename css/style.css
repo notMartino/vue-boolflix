@@ -40,28 +40,66 @@ header h1{
 
 /* Film box */
 .filmBox{
-    width: 200px;
+    flex-basis: calc((100% / 6) - 30px);
     margin: 0 30px 20px 0;
-    padding: 10px;
-}
-.filmBox ul{
-    background-color: grey;
+    position: relative;
+    overflow-y: hidden;
 }
 
+/* Immagine film/serie */
 .filmBox .cover{
     width: 100%;
+    height: 300px;
 }
 
+.filmBox .overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0;
+    transition: opacity 0.2s linear;
+}
+
+.filmBox > ul{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    opacity: 0;
+    padding: 20px 10px;
+    transition: opacity 0.2s linear;
+}
+.filmBox:hover ul{
+    opacity: 1;
+}
+.filmBox:hover .overlay{
+    opacity: 0.7;
+}
+    
+/* Bandiera/Codice lingua */
 .filmBox .flag{
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
+    height: 18px;
+    border-radius: 3px;
     vertical-align: middle;
 }
 .filmBox .language{
     vertical-align: middle;
+    font-weight: bold;
 }
 
+/* Valutazione film/serie */
 .filmBox .rating li{
     display: inline-block;
+    margin: 5px 0;
+}
+.rating .star-full + .star-empty{
+    margin-left: -3px;
+}
+
+.rating i {
+    color: yellow;
 }

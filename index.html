@@ -22,30 +22,31 @@
     <div id="vue">
         <header>
             <h1>BoolFlix</h1>
-
+            
             <div>
                 <input type="text" v-model="search" @keydown.enter="searchFilm()">
                 <button @click="searchFilm()">Ricerca</button>
             </div>
         </header>
-    
+        
         <main class="contentList">
-            <div v-for="film in filmList" class="filmBox">
+            <div v-for="film in films" class="filmBox">
+                <img class="cover" :src="film.poster_path != null ? 'https://image.tmdb.org/t/p/w342/' + film.poster_path : 'img/img-not-found.png'" alt="Cover film">
+                
+                <div class="overlay"></div>
+
                 <ul>
                     <li>
-                        <img class="cover" :src="'https://image.tmdb.org/t/p/w342/' + film.poster_path" alt="Cover film">
                     </li>
                     <li>
-                        <h2>
-                            {{film.title}}
-                        </h2>
+                        <strong>Title:</strong> {{film.title}}
                     </li>
                     <li>
-                        Titolo originale: {{film.original_title}}
+                        <strong>Original title:</strong> {{film.original_title}}
                     </li>
                     <li>
                         <span class="language">
-                            Lingua:
+                            Language:
                         </span>
                         <img class="flag" v-if="film.original_language == 'it'|| film.original_language == 'en'" :src="'img/flag-' + film.original_language + '.png'" alt="Flag"> 
                         <span v-else class="language">
@@ -53,32 +54,40 @@
                         </span>
                     </li>
                     <li>
-                        Voto medio: {{film.vote_average}}
                         <ul class="rating">
-                            <li v-for="(star, index) in 5">
-                                <i :class="starRating(film, index)"></i>
+                            <li> <strong>Grade:</strong></li>
+                            <li class="star-full" v-for="star in film.vote_average">
+                                <i class="fas fa-star"></i>
+                            </li>
+                            <li class="star-empty" v-for="star in (5 - film.vote_average)">
+                                <i class="far fa-star"></i>
                             </li>
                         </ul>
+                    </li>
+
+                    <li>
+                        <strong>Overview:</strong> 
+                        {{film.overview.slice(0, 250)}}
+                        <span v-if="film.overview.length > 250">...</span>
                     </li>
                 </ul>
             </div>
 
-            <div v-for="serie in serieList" class="filmBox">
+            <div v-for="serie in series" class="filmBox">
+                <img class="cover" :src="serie.poster_path != null ? 'https://image.tmdb.org/t/p/w342/' + serie.poster_path : 'img/img-not-found.png'" alt="Cover film">
+
+                <div class="overlay"></div>
+                
                 <ul>
                     <li>
-
+                        <strong>Title: </strong> {{serie.name}}
                     </li>
                     <li>
-                        <h2>
-                            {{serie.name}}
-                        </h2>
-                    </li>
-                    <li>
-                        Titolo originale: {{serie.original_name}}
+                        <strong>Original title:</strong> {{serie.original_name}}
                     </li>
                     <li>
                         <span class="language">
-                            Lingua:
+                            Language:
                         </span>
                         <img class="flag" v-if="serie.original_language == 'it'|| serie.original_language == 'en'" :src="'img/flag-' + serie.original_language + '.png'" alt="Flag"> 
                         <span v-else class="language">
@@ -86,12 +95,20 @@
                         </span>
                     </li>
                     <li>
-                        Voto medio: {{serie.vote_average}}
                         <ul class="rating">
-                            <li v-for="(star, index) in 5">
-                                <i :class="starRating(serie, index)"></i>
+                            <li> <strong>Grade</strong></li>
+                            <li class="star-full" v-for="star in serie.vote_average">
+                                <i class="fas fa-star"></i>
+                            </li>
+                            <li class="star-empty" v-for="star in (5 - serie.vote_average)">
+                                <i class="far fa-star"></i>
                             </li>
                         </ul>
+                    </li>
+                    <li>
+                        <strong>Overview:</strong> 
+                        {{serie.overview.slice(0, 250)}}
+                        <span v-if="serie.overview.length > 250">...</span>
                     </li>
                 </ul>
             </div>
