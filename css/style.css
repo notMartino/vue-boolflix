@@ -1,0 +1,43 @@
+/* Proprietà generali */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    color: white;
+}
+#vue{
+    overflow-x: hidden;
+}
+
+/* Proprietà header */
+header {
+    background-color: grey;
+    height: 100px;
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+header h1{
+    margin-right: 20px;
+}
+
+/* Proprietà main */
+.contentList{
+    min-height: calc(100vh - 100px);
+    padding: 30px 50px;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: black;
+    margin-right: -30px;
+}
+
+/* Film box */
+.filmBox{
+    width: 200px;
+    height: 200px;
+    margin: 0 30px 20px 0;
+    background-color: grey;
+}

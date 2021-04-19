@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Martino's Flix</title>
+
+    <!-- Vue -->
+    <script src="js/vue.js"></script>
+    <!-- Axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous"></script>
+
+    <script src="js/script.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- App con Vue -->
+    <div id="vue">
+        <header>
+            <h1>BoolFlix</h1>
+
+            <div>
+                <input type="text" v-model="search" @keydown.enter="searchFilm()">
+                <button @click="searchFilm()">Ricerca</button>
+            </div>
+        </header>
+    
+        <main class="contentList">
+            <div v-for="film in filmList" class="filmBox">
+                <h2>{{film.title}}</h2>
+                <h3>titolo originale: {{film.original_title}}</h3>
+                <h3>lingua originale: {{film.original_language}}</h3>
+                <h4>voto medio: {{film.vote_average}}</h4>
+
+            </div>
+        </main>
+
+    </div>
+</body>
+</html>
