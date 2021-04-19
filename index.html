@@ -28,11 +28,53 @@
     
         <main class="contentList">
             <div v-for="film in filmList" class="filmBox">
-                <h2>{{film.title}}</h2>
-                <h3>titolo originale: {{film.original_title}}</h3>
-                <h3>lingua originale: {{film.original_language}}</h3>
-                <h4>voto medio: {{film.vote_average}}</h4>
+                <ul>
+                    <li>
+                        <h2>
+                            {{film.title}}
+                        </h2>
+                    </li>
+                    <li>
+                        Titolo originale: {{film.original_title}}
+                    </li>
+                    <li>
+                        <span class="language">
+                            Lingua:
+                        </span>
+                        <img class="flag" v-if="film.original_language == 'it'|| film.original_language == 'en'" :src="'img/flag-' + film.original_language + '.png'" alt="Flag"> 
+                        <span v-else class="language">
+                             {{film.original_language}}
+                        </span>
+                    </li>
+                    <li>
+                        Voto medio: {{film.vote_average}}
+                    </li>
+                </ul>
+            </div>
 
+            <div v-for="serie in serieList" class="filmBox">
+                <ul>
+                    <li>
+                        <h2>
+                            {{serie.name}}
+                        </h2>
+                    </li>
+                    <li>
+                        Titolo originale: {{serie.original_name}}
+                    </li>
+                    <li>
+                        <span class="language">
+                            Lingua:
+                        </span>
+                        <img class="flag" v-if="serie.original_language == 'it'|| serie.original_language == 'en'" :src="'img/flag-' + serie.original_language + '.png'" alt="Flag"> 
+                        <span v-else class="language">
+                             {{serie.original_language}}
+                        </span>
+                    </li>
+                    <li>
+                        Voto medio: {{serie.vote_average}}
+                    </li>
+                </ul>
             </div>
         </main>
 

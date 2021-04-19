@@ -7,6 +7,9 @@
 body{
     color: white;
 }
+ul{
+    list-style-type: none;
+}
 #vue{
     overflow-x: hidden;
 }
@@ -29,6 +32,7 @@ header h1{
     min-height: calc(100vh - 100px);
     padding: 30px 50px;
     display: flex;
+    align-content: flex-start;
     flex-wrap: wrap;
     background-color: black;
     margin-right: -30px;
@@ -39,5 +43,15 @@ header h1{
     width: 200px;
     height: 200px;
     margin: 0 30px 20px 0;
+    padding: 10px;
     background-color: grey;
+}
+.filmBox .flag{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+.filmBox .language{
+    vertical-align: middle;
 }
