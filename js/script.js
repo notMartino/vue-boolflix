@@ -9,6 +9,9 @@ function martinosflix() {
             serieList: [],
             api_key: '159bee94cc034456f8348926b952865b',
             starClass: '',
+            nameList: [],
+            genreList: [],
+            show: ''
         },
         computed:{
             films: function () {
@@ -67,22 +70,41 @@ function martinosflix() {
                             console.log('Error');
                     });
                 }
+            },
+            actorsAndGenres: function (id) {
+                axios.get('https://api.themoviedb.org/3/movie/' + id, 
+                    {
+                        params:{
+                            api_key: this.api_key,
+                            append_to_response: 'credits'
+                        }
+                    }).then(data => {
+                        if (this.nameList.length == 0) {
+                            let axiosActors = data.data.credits.cast.slice(0,5);
+                            for (let i = 0; i < axiosActors.length; i++) {
+                                const element = axiosActors[i];
+                                this.nameList.push(element.original_name);
+                            }
+                        }
+
+                        if (this.genreList.length == 0) {
+                            let axiosGenres = data.data.genres;
+                            for (let i = 0; i < axiosGenres.length; i++) {
+                                const element = axiosGenres[i];
+                                this.genreList.push(element.name);
+                            }
+                        }
+
+                        this.show = 'show';
+                    }).catch(() => {
+                        console.log('Error');
+                    });
+            },
+            cleanList: function () {
+                this.show = '';
+                this.nameList = [];
+                this.genreList = [];
             }
-            // starRating: function (film) {
-            //     let stars = film.vote_average;
-            //     return rating = Math.round((5 * stars) / 10);
-                // return rating;
-
-                // let iconClass = '';
-
-                // if(rating <= index) {
-                //     iconClass = 'far fa-star';
-                // }else{
-                //     iconClass = 'fas fa-star';
-                // }
-
-                // return iconClass;
-            // }
         }
     });
 }

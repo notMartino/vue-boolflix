@@ -9,6 +9,10 @@
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/2e0cc00556.js" crossorigin="anonymous"></script>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;600;700;800&display=swap" rel="stylesheet">
+
     <!-- Vue -->
     <script src="js/vue.js"></script>
     <!-- Axios -->
@@ -21,17 +25,24 @@
     <!-- App con Vue -->
     <div id="vue">
         <header>
-            <h1>BoolFlix</h1>
-            
-            <div>
-                <input type="text" v-model="search" @keydown.enter="searchFilm()">
-                <button @click="searchFilm()">Ricerca</button>
-            </div>
+            <ul>
+                <li>
+                    <a href="index.html">
+                        <img src="img/netflix-logo.png" alt="Netflix Logo">
+                    </a>
+                    <a href="index.html">Home</a>
+                </li>
+                <li class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" v-model="search" @keydown.enter="searchFilm()">
+                    <!-- <button @click="searchFilm()">Ricerca</button> -->
+                </li>
+            </ul>
         </header>
         
         <main class="contentList">
-            <div v-for="film in films" class="filmBox">
-                <img class="cover" :src="film.poster_path != null ? 'https://image.tmdb.org/t/p/w342/' + film.poster_path : 'img/img-not-found.png'" alt="Cover film">
+            <div v-for="film in films" class="filmBox" @mouseleave="cleanList()">
+                <img class="cover" :src="film.poster_path != null ? 'https://image.tmdb.org/t/p/w500/' + film.poster_path : 'img/img-not-found2.png'" alt="Cover film">
                 
                 <div class="overlay"></div>
 
@@ -39,10 +50,10 @@
                     <li>
                     </li>
                     <li>
-                        <strong>Title:</strong> {{film.title}}
+                       <h3>{{film.title}}</h3>
                     </li>
-                    <li>
-                        <strong>Original title:</strong> {{film.original_title}}
+                    <li v-if="film.title != film.original_title">
+                        Original title: {{film.original_title}}
                     </li>
                     <li>
                         <span class="language">
@@ -55,35 +66,54 @@
                     </li>
                     <li>
                         <ul class="rating">
-                            <li> <strong>Grade:</strong></li>
                             <li class="star-full" v-for="star in film.vote_average">
-                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star fa-sm"></i>
                             </li>
                             <li class="star-empty" v-for="star in (5 - film.vote_average)">
-                                <i class="far fa-star"></i>
+                                <i class="far fa-star fa-sm"></i>
                             </li>
                         </ul>
                     </li>
 
-                    <li>
-                        <strong>Overview:</strong> 
-                        {{film.overview.slice(0, 250)}}
-                        <span v-if="film.overview.length > 250">...</span>
+                    <li class="overview" @click="actorsAndGenres(film.id)">
+                        <span class="title">
+                            Overview: 
+                        </span>
+                        {{film.overview.slice(0, 50)}}
+                        <span class="threepoint" v-if="film.overview.length > 50">...</span>
+
+                        <span class="title">
+                            [More details] 
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+
+                        <ul :class="show">
+                            <li class="title">Actors: </li>
+                            <li v-for="(actor, index) in nameList">
+                                {{actor}} <span v-if="(nameList.length - 1) > index">,</span>
+                                &#160;
+                            </li>
+                            <li class="title">Genres: </li>
+                            <li v-for="(genre, index) in genreList">
+                                {{genre}} <span v-if="(genreList.length - 1) > index">,</span>
+                                &#160;
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
 
             <div v-for="serie in series" class="filmBox">
-                <img class="cover" :src="serie.poster_path != null ? 'https://image.tmdb.org/t/p/w342/' + serie.poster_path : 'img/img-not-found.png'" alt="Cover film">
+                <img class="cover" :src="serie.poster_path != null ? 'https://image.tmdb.org/t/p/w500/' + serie.poster_path : 'img/img-not-found.png'" alt="Cover film">
 
                 <div class="overlay"></div>
                 
                 <ul>
                     <li>
-                        <strong>Title: </strong> {{serie.name}}
+                        <h3>{{serie.name}}</h3>
                     </li>
-                    <li>
-                        <strong>Original title:</strong> {{serie.original_name}}
+                    <li v-if="serie.name != serie.original_name">
+                        Original title: {{serie.original_name}}
                     </li>
                     <li>
                         <span class="language">
@@ -96,19 +126,17 @@
                     </li>
                     <li>
                         <ul class="rating">
-                            <li> <strong>Grade</strong></li>
                             <li class="star-full" v-for="star in serie.vote_average">
-                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star fa-sm"></i>
                             </li>
                             <li class="star-empty" v-for="star in (5 - serie.vote_average)">
-                                <i class="far fa-star"></i>
+                                <i class="far fa-star fa-sm"></i>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <strong>Overview:</strong> 
-                        {{serie.overview.slice(0, 250)}}
-                        <span v-if="serie.overview.length > 250">...</span>
+                        Overview: {{serie.overview.slice(0, 50)}}
+                        <span class="threepoint" v-if="serie.overview.length > 50">...</span>
                     </li>
                 </ul>
             </div>
