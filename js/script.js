@@ -11,7 +11,8 @@ function martinosflix() {
             starClass: '',
             nameList: [],
             genreList: [],
-            show: ''
+            show: '',
+            slicedWord: 50
         },
         computed:{
             films: function () {
@@ -96,6 +97,37 @@ function martinosflix() {
                         }
 
                         this.show = 'show';
+                        this.slicedWord = 1000;
+                    }).catch(() => {
+                        console.log('Error');
+                    });
+            },
+            actorsAndGenresSerie: function (id) {
+                axios.get('https://api.themoviedb.org/3/tv/' + id, 
+                    {
+                        params:{
+                            api_key: this.api_key,
+                            append_to_response: 'credits'
+                        }
+                    }).then(data => {
+                        if (this.nameList.length == 0) {
+                            let axiosActors = data.data.credits.cast.slice(0,5);
+                            for (let i = 0; i < axiosActors.length; i++) {
+                                const element = axiosActors[i];
+                                this.nameList.push(element.original_name);
+                            }
+                        }
+
+                        if (this.genreList.length == 0) {
+                            let axiosGenres = data.data.genres;
+                            for (let i = 0; i < axiosGenres.length; i++) {
+                                const element = axiosGenres[i];
+                                this.genreList.push(element.name);
+                            }
+                        }
+
+                        this.show = 'show';
+                        this.slicedWord = 1000;
                     }).catch(() => {
                         console.log('Error');
                     });
@@ -104,6 +136,7 @@ function martinosflix() {
                 this.show = '';
                 this.nameList = [];
                 this.genreList = [];
+                this.slicedWord = 50;
             }
         }
     });

@@ -79,8 +79,8 @@
                         <span class="title">
                             Overview: 
                         </span>
-                        {{film.overview.slice(0, 50)}}
-                        <span class="threepoint" v-if="film.overview.length > 50">...</span>
+                        {{film.overview.slice(0, slicedWord)}}
+                        <span class="threepoint" v-if="film.overview.length > slicedWord">...</span>
 
                         <span class="title">
                             [More details] 
@@ -88,12 +88,13 @@
                         </span>
 
                         <ul :class="show">
-                            <li class="title">Actors: </li>
+                            <li class="title" v-if="nameList.length > 0">Actors: </li>
+                            <li v-if="nameList.length == 0 && genreList.length == 0">No details</li>
                             <li v-for="(actor, index) in nameList">
                                 {{actor}} <span v-if="(nameList.length - 1) > index">,</span>
                                 &#160;
                             </li>
-                            <li class="title">Genres: </li>
+                            <li class="title" v-if="genreList.length > 0">Genres: </li>
                             <li v-for="(genre, index) in genreList">
                                 {{genre}} <span v-if="(genreList.length - 1) > index">,</span>
                                 &#160;
@@ -103,7 +104,7 @@
                 </ul>
             </div>
 
-            <div v-for="serie in series" class="filmBox">
+            <div v-for="serie in series" class="filmBox" @mouseleave="cleanList()">
                 <img class="cover" :src="serie.poster_path != null ? 'https://image.tmdb.org/t/p/w500/' + serie.poster_path : 'img/img-not-found.png'" alt="Cover film">
 
                 <div class="overlay"></div>
@@ -134,9 +135,33 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        Overview: {{serie.overview.slice(0, 50)}}
-                        <span class="threepoint" v-if="serie.overview.length > 50">...</span>
+                    <li class="overview" @click="actorsAndGenresSerie(serie.id)">
+                        <span class="title">
+                            Overview: 
+                        </span>
+
+                        {{serie.overview.slice(0, slicedWord)}}
+
+                        <span class="threepoint" v-if="serie.overview.length > slicedWord">...</span>
+
+                        <span class="title">
+                            [More details] 
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+
+                        <ul :class="show">
+                            <li class="title" v-if="nameList.length > 0">Actors: </li>
+                            <li v-if="nameList.length == 0 && genreList.length == 0">No details</li>
+                            <li v-for="(actor, index) in nameList">
+                                {{actor}} <span v-if="(nameList.length - 1) > index">,</span>
+                                &#160;
+                            </li>
+                            <li class="title" v-if="genreList.length > 0">Genres: </li>
+                            <li v-for="(genre, index) in genreList">
+                                {{genre}} <span v-if="(genreList.length - 1) > index">,</span>
+                                &#160;
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
