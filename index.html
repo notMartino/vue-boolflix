@@ -37,7 +37,7 @@
                 <!-- Barra di ricerca -->
                 <li class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" v-model="search" @keydown.enter="searchFilm()">
+                    <input type="text" v-model="search" @keydown.enter="searchFilm('movie'), searchFilm('tv')">
                 </li>
             </ul>
         </header>
@@ -85,7 +85,7 @@
                         </ul>
                     </li>
 
-                    <li class="overview" @click="actorsAndGenres(film.id)">
+                    <li class="overview" @click="actorsAndGenres(film.id, 'movie')">
                         <span class="title">
                             Overview: 
                         </span>
@@ -117,7 +117,7 @@
 
             <!-- Film -->
             <h2 class="section-title" v-if="searched == true && filmList.length > 0">Films</h2>
-            <h2 class="section-title" v-else-if="searched == true && filmList.length == 0">No films founded</h2>
+            <h2 class="section-title" v-else-if="searched == true && filmList.length == 0">No films found</h2>
 
             <!-- Box film -->
             <div v-for="film in films" class="filmBox" @mouseleave="cleanList()">
@@ -156,7 +156,7 @@
                         </ul>
                     </li>
 
-                    <li class="overview" @click="actorsAndGenres(film.id)">
+                    <li class="overview" @click="actorsAndGenres(film.id, 'movie')">
                         <span class="title">
                             Overview: 
                         </span>
@@ -188,7 +188,7 @@
 
             <!-- Serie -->
             <h2 class="section-title" v-if="searched == true && serieList.length > 0">Series</h2>
-            <h2 class="section-title" v-else-if="searched == true && serieList.length == 0">No series founded</h2>
+            <h2 class="section-title" v-else-if="searched == true && serieList.length == 0">No series found</h2>
 
             <!-- Box serie -->
             <div v-for="serie in series" class="filmBox" @mouseleave="cleanList()">
@@ -223,34 +223,36 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="overview" @click="actorsAndGenresSerie(serie.id)">
-                        <span class="title">
-                            Overview: 
-                        </span>
-
-                        {{serie.overview.slice(0, slicedWord)}}
-
-                        <span class="threepoint" v-if="serie.overview.length > slicedWord">...</span>
-
-                        <span class="title">
-                            [More details] 
-                            <i class="fas fa-info-circle"></i>
-                        </span>
-
-                        <!-- Lista absolute con i dati secondari della serie -->
-                        <ul :class="show">
-                            <li class="title" v-if="nameList.length > 0">Actors: </li>
-                            <li v-if="nameList.length == 0 && genreList.length == 0">No details</li>
-                            <li v-for="(actor, index) in nameList">
-                                {{actor}} <span v-if="(nameList.length - 1) > index">,</span>
-                                &#160;
-                            </li>
-                            <li class="title" v-if="genreList.length > 0">Genres: </li>
-                            <li v-for="(genre, index) in genreList">
-                                {{genre}} <span v-if="(genreList.length - 1) > index">,</span>
-                                &#160;
-                            </li>
-                        </ul>
+                    <li class="overview" @click="actorsAndGenres(serie.id, 'tv')">
+                        <template v-if="">
+                            <span class="title">
+                                Overview: 
+                            </span>
+    
+                            {{serie.overview.slice(0, slicedWord)}}
+    
+                            <span class="threepoint" v-if="serie.overview.length > slicedWord">...</span>
+    
+                            <span class="title">
+                                [More details] 
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+    
+                            <!-- Lista absolute con i dati secondari della serie -->
+                            <ul :class="show">
+                                <li class="title" v-if="nameList.length > 0">Actors: </li>
+                                <li v-if="nameList.length == 0 && genreList.length == 0">No details</li>
+                                <li v-for="(actor, index) in nameList">
+                                    {{actor}} <span v-if="(nameList.length - 1) > index">,</span>
+                                    &#160;
+                                </li>
+                                <li class="title" v-if="genreList.length > 0">Genres: </li>
+                                <li v-for="(genre, index) in genreList">
+                                    {{genre}} <span v-if="(genreList.length - 1) > index">,</span>
+                                    &#160;
+                                </li>
+                            </ul>
+                        </template>
                     </li>
                 </ul>
             </div>

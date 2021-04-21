@@ -181,7 +181,6 @@ header img{
 .filmBox > ul::-webkit-scrollbar {
     display: none;
 }
-
 .filmBox:hover ul{
     opacity: 1;
 }
@@ -198,7 +197,7 @@ header img{
     vertical-align: middle;
 }
 
-/* Valutazione film/serie */
+/* Valutazione 5 stelle film/serie */
 .filmBox .rating li{
     display: inline-block;
     margin: 5px 0;
@@ -210,35 +209,37 @@ header img{
     color: red;
 }
 
+/* Descrizione film */
 .filmBox .overview{
     position: relative;
     cursor: pointer;
     font-size: 11px;
     line-height: 11px;
 }
-
 .filmBox .overview ul{
     display: none;
 }
 
+/* Classe per rendere visibili i dettegli descrizione film */
 .show{
     display: block!important;
 } 
 
+/* Puntini di sospensione a overview troncata */
 .overview .threepoint{
     margin-left: -3px;
 }
+
+/* Titoletti in rosso */
 .overview .title{
     display: block;
     font-weight: 400;
     color: red;
 }
-
 .overview .title i{
     vertical-align: middle;
     font-size: 14px;
 }
-
 .overview ul li{
     display: inline-block;
 }
