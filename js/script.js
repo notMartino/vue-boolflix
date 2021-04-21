@@ -1,21 +1,20 @@
 // Funzione princiapale
 function martinosflix() {
-
     new Vue({
         el: '#vue',
         data: {
-            search: '',
-            searched: false,
-            popularFilm: [],
-            filmList: [],
-            serieList: [],
-            api_key: '159bee94cc034456f8348926b952865b',
-            starClass: '',
-            nameList: [],
-            genreList: [],
-            show: '',
-            slicedWord: 50
+            search: '', // Stringa ricerca (v-model)
+            searched: false, // Ricerca effettuta
+            popularFilm: [], // Lista film popolari
+            filmList: [], // Lista films cercati
+            serieList: [], // Lista serie cercate
+            api_key: '159bee94cc034456f8348926b952865b', // API key fisso
+            nameList: [], // Lista nomi attori film/serie cliccata
+            genreList: [], // Lista generi film/serie cliccata
+            show: '', // classe display block
+            slicedWord: 50 // lunghezza stringa overview
         },
+        // Funzione film random/popolari
         mounted: function () {
             axios.get('https://api.themoviedb.org/3/movie/popular',
                 {
@@ -32,6 +31,7 @@ function martinosflix() {
             });
         },
         computed:{
+            // Generatore lista popular copiata, con stelle in base 5
             popular: function () {
                 return this.popularFilm.map((film) =>{
                     let stars = film.vote_average ;
@@ -42,6 +42,7 @@ function martinosflix() {
                     return newPopular;
                 });
             },
+            // Generatore lista films copiata, con stelle in base 5
             films: function () {
                 this.popularFilm = []; 
                 
@@ -54,6 +55,7 @@ function martinosflix() {
                     return newFilm;
                 });
             },
+            // Generatore lista serie copiata, con stelle in base 5
             series: function () {
                 this.popularFilm = [];
                 
@@ -68,6 +70,7 @@ function martinosflix() {
             }
         },
         methods: {
+            // Funzione ricerca film/serie
             searchFilm: function () {
                 if (this.search != '' && this.search[0] != ' ') {
                     console.log('Hai cercato: ' + this.search);
@@ -105,6 +108,7 @@ function martinosflix() {
                 this.searched = true;
             },
             actorsAndGenres: function (id) {
+                // API attori e generi per ID (film)
                 axios.get('https://api.themoviedb.org/3/movie/' + id, 
                 {
                     params:{
@@ -127,7 +131,7 @@ function martinosflix() {
                                 this.genreList.push(element.name);
                             }
                         }
-
+                        
                         this.show = 'show';
                         this.slicedWord = 1000;
                     }).catch(() => {
@@ -135,6 +139,7 @@ function martinosflix() {
                     });
             },
             actorsAndGenresSerie: function (id) {
+                // API attori e generi per ID (serie)
                 axios.get('https://api.themoviedb.org/3/tv/' + id, 
                     {
                         params:{
@@ -164,6 +169,7 @@ function martinosflix() {
                         console.log('Error');
                     });
             },
+            // Funzione pulizia attori/generi
             cleanList: function () {
                 this.show = '';
                 this.nameList = [];

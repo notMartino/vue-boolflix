@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Martino's Flix</title>
+    <link rel="shortcut icon" href="img/netflix-ico.png" type="image/x-icon">
 
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/2e0cc00556.js" crossorigin="anonymous"></script>
@@ -26,12 +27,14 @@
     <div id="vue">
         <header>
             <ul>
+                <!-- Logo e Home link -->
                 <li>
                     <a href="index.html">
                         <img src="img/netflix-logo.png" alt="Netflix Logo">
                     </a>
                     <a href="index.html">Home</a>
                 </li>
+                <!-- Barra di ricerca -->
                 <li class="search-box">
                     <i class="fas fa-search"></i>
                     <input type="text" v-model="search" @keydown.enter="searchFilm()">
@@ -39,16 +42,20 @@
             </ul>
         </header>
         
+        <!-- Finestra principale con films/serie -->
         <main class="contentList">
             
             <!-- Popular -->
             <h2 class="section-title" v-if="popular.length > 0">Most popular films</h2>
+
+            <!-- Box film -->
             <div v-for="film in popular" class="filmBox" @mouseleave="cleanList()">
 
                 <img class="cover" :src="film.poster_path != null ? 'https://image.tmdb.org/t/p/w500/' + film.poster_path : 'img/img-not-found2.png'" alt="Cover film">
                 
                 <div class="overlay"></div>
 
+                <!-- Lista absolute con i dati pricipali del film -->
                 <ul>
                     <li>
                     </li>
@@ -84,12 +91,13 @@
                         </span>
                         {{film.overview.slice(0, slicedWord)}}
                         <span class="threepoint" v-if="film.overview.length > slicedWord">...</span>
-
+                        
                         <span class="title">
                             [More details] 
                             <i class="fas fa-info-circle"></i>
                         </span>
-
+                        
+                        <!-- Lista absolute con i dati secondari del film -->
                         <ul :class="show">
                             <li class="title" v-if="nameList.length > 0">Actors: </li>
                             <li v-if="nameList.length == 0 && genreList.length == 0">No details</li>
@@ -107,16 +115,18 @@
                 </ul>
             </div>
 
-            <!-- Films -->
+            <!-- Film -->
             <h2 class="section-title" v-if="searched == true && filmList.length > 0">Films</h2>
             <h2 class="section-title" v-else-if="searched == true && filmList.length == 0">No films founded</h2>
 
+            <!-- Box film -->
             <div v-for="film in films" class="filmBox" @mouseleave="cleanList()">
                 
                 <img class="cover" :src="film.poster_path != null ? 'https://image.tmdb.org/t/p/w500/' + film.poster_path : 'img/img-not-found.png'" alt="Cover film">
                 
                 <div class="overlay"></div>
 
+                <!-- Lista absolute con i dati pricipali del film -->
                 <ul>
                     <li>
                     </li>
@@ -158,6 +168,7 @@
                             <i class="fas fa-info-circle"></i>
                         </span>
 
+                        <!-- Lista absolute con i dati secondari del film -->
                         <ul :class="show">
                             <li class="title" v-if="nameList.length > 0">Actors: </li>
                             <li v-if="nameList.length == 0 && genreList.length == 0">No details</li>
@@ -179,11 +190,13 @@
             <h2 class="section-title" v-if="searched == true && serieList.length > 0">Series</h2>
             <h2 class="section-title" v-else-if="searched == true && serieList.length == 0">No series founded</h2>
 
+            <!-- Box serie -->
             <div v-for="serie in series" class="filmBox" @mouseleave="cleanList()">
                 <img class="cover" :src="serie.poster_path != null ? 'https://image.tmdb.org/t/p/w500/' + serie.poster_path : 'img/img-not-found.png'" alt="Cover film">
-
+                
                 <div class="overlay"></div>
                 
+                <!-- Lista absolute con i dati pricipali della serie -->
                 <ul>
                     <li>
                         <h3>{{serie.name}}</h3>
@@ -224,6 +237,7 @@
                             <i class="fas fa-info-circle"></i>
                         </span>
 
+                        <!-- Lista absolute con i dati secondari della serie -->
                         <ul :class="show">
                             <li class="title" v-if="nameList.length > 0">Actors: </li>
                             <li v-if="nameList.length == 0 && genreList.length == 0">No details</li>
