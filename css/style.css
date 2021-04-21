@@ -83,10 +83,17 @@ header img{
     margin-right: -5px;
 }
 
+.contentList .section-title{
+    width: 100%;
+    margin: 30px 0 20px;
+    font-size: 20px;
+    font-weight: 400;
+}
+
 /* Film box */
 .filmBox{
-    flex-basis: calc((100% / 7) - 5px);
-    margin: 0 5px 5px 0;
+    flex-basis: calc((100% / 7) - 10px);
+    margin: 0 10px 50px 0;
     position: relative;
     /* overflow-y: hidden; */
     font-size: 12px;
@@ -102,7 +109,7 @@ header img{
 
 @media all and (max-width: 1499px) {
     .filmBox{
-        flex-basis: calc((100% / 6) - 6px);
+        flex-basis: calc((100% / 6) - 10px);
     }
     .filmBox .cover{
         height: 280px;
@@ -110,7 +117,7 @@ header img{
 }
 @media all and (max-width: 1199px) {
     .filmBox{
-        flex-basis: calc((100% / 4) - 5px);
+        flex-basis: calc((100% / 4) - 10px);
     }
     .filmBox .cover{
         height: 280px;
@@ -118,7 +125,7 @@ header img{
 }
 @media all and (max-width: 767px) {
     .filmBox{
-        flex-basis: calc((100% / 3) - 5px);
+        flex-basis: calc((100% / 3) - 10px);
     }
     .filmBox .cover{
         height: 200px;
@@ -129,7 +136,7 @@ header img{
         justify-content: center;
     }
     .filmBox{
-        flex-basis: calc((70% / 1) - 5px);
+        flex-basis: calc((70% / 1) - 10px);
         min-width: 300px;
     }
     .filmBox .cover{
