@@ -13,22 +13,16 @@ function martinosflix() {
             genreList: [], // Lista generi film/serie cliccata
             show: '', // classe display block
             slicedWord: 50, // lunghezza stringa overview
+            genresList: [], // Lisat generi
+            filteredFilms: [],
+            filteredSeries: [],
+            filter: 0
         },
-        // Funzione film random/popolari
         mounted: function () {
-            axios.get('https://api.themoviedb.org/3/movie/popular',
-                {
-                    params:{
-                        api_key: this.api_key,
-                        language: 'en-EN',
-                        page: 1
-                    }
-                }).then(data => {
-                        console.log('Popular: ', data.data.results);
-                        this.popularFilm = data.data.results;
-                }).catch(() => {
-                    console.log('Error');
-            });
+            // Richiamo la funzione film popolari a pagina montata
+            this.getPopular();
+            this.getGenres('movie');
+            this.getGenres('tv');
         },
         computed:{
             // Generatore lista popular copiata, con stelle in base 5
@@ -65,16 +59,35 @@ function martinosflix() {
                             console.log('Series: ', data.data.results);
                             this.serieList = data.data.results;
                         }
+                        
+                        this.popularFilm = []; 
+                        if (this.filmList.length < 1 && this.serieList.length < 1) {
+                            this.getPopular();
+                        }
 
-                        // if (this.filmList.length > 0 && this.serieList.length > 0) {
-                            this.popularFilm = []; 
-                        // }
                     }).catch(() => {
                         console.log('Error');
                     });
                 }
-                this.searched = true;
+                    this.searched = true;
             },
+            // Funzione genera film popolari
+            getPopular: function () {
+                axios.get('https://api.themoviedb.org/3/movie/popular',
+                    {
+                        params:{
+                            api_key: this.api_key,
+                            language: 'en-US',
+                            page: 1
+                        }
+                    }).then(data => {
+                            console.log('Popular: ', data.data.results);
+                            this.popularFilm = data.data.results;
+                    }).catch(() => {
+                        console.log('Error');
+                });   
+            }
+            ,
             // Lista generica copiata, con stelle in base 5
             arrayMap: function (arrayList) {
                 return arrayList.map((film) => {
@@ -123,6 +136,60 @@ function martinosflix() {
                 this.nameList = [];
                 this.genreList = [];
                 this.slicedWord = 50;
+            },
+            // Funzione ricerca generi disponibili
+            getGenres: function (type) {
+                axios.get('https://api.themoviedb.org/3/genre/'+ type +'/list',
+                {
+                    params:{
+                        api_key: this.api_key,
+                        language: 'en-US'
+                    }
+                }).then(data => {
+                    let arrayGenres = data.data.genres;
+                    
+                    for (let i = 0; i < arrayGenres.length; i++) {
+                        let cont = 0;
+                        for (let j = 0; j < this.genresList.length; j++) {
+                            if (this.genresList[j].id == arrayGenres[i].id) {
+                                cont++;
+                                break;
+                            }
+                        }
+                        if (cont == 0) {
+                            this.genresList.push(arrayGenres[i])
+                        }
+                    }
+
+                    this.filterByGenre();
+                }).catch(() => {
+                    console.log('Error');
+                });
+            },
+            filterByGenre: function () {
+                this.filteredFilms = this.filmList.filter(film => {
+                    if (this.filter == 0) {
+                        console.log('oooo');
+                        return film;
+                    }
+                    else{
+                        let cont = 0;
+                        for (let i = 0; i < film.genre_ids.length; i++) {
+                            if (this.filter == film.genre_ids[i]) {
+                                console.log('genere', film.genre_ids[i]);
+                                cont++;
+                                break;
+                            }
+                        }
+                        console.log(cont);
+                        if (cont > 0) {
+                            console.log(film);
+                            return film;
+                        }
+                    }
+                    console.log(this.filter, film.genre_ids);
+                });
+                console.log(this.filteredFilms);
             }
         }
     });

@@ -35,14 +35,37 @@ header ul{
 header li a{
     color: white;
     text-decoration: none;
-    vertical-align: middle  ;
+    /* vertical-align: middle  ; */
 }
+
 /* Logo */
-header img{
+.link-box img{
     width: 160px;
     margin-right: 20px;
-    vertical-align: middle;
+    /* vertical-align: middle; */
 }
+.link-box{
+    width: 450px;
+    display: flex;
+    align-items: center;
+}
+.link-box label{
+    margin-left: 15px;
+}
+.link-box select{
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    background-color: transparent;
+    font-size: 16px;
+    border: 0px solid transparent;
+    margin-left: 5px;
+    padding-top: 1px;
+    word-break: break-all;
+}
+.link-box select option{
+    background-color: black;
+}
+
 /* Sezione ricerca film/serie */
 .search-box{
     position: relative;
@@ -104,6 +127,7 @@ header img{
     vertical-align: middle;
     width: 100%;
     height: 300px;
+    object-fit: cover;
 }
 
 /* Dimensioni film box resposnsive */
@@ -226,7 +250,7 @@ header img{
 } 
 
 /* Puntini di sospensione a overview troncata */
-.overview .threepoint{
+.threepoint{
     margin-left: -3px;
 }
 

@@ -28,14 +28,22 @@
         <header>
             <ul>
                 <!-- Logo e Home link -->
-                <li>
+                <li class="link-box">
                     <a href="index.html">
                         <img src="img/netflix-logo.png" alt="Netflix Logo">
                     </a>
                     <a href="index.html">Home</a>
+                    <select name="genre" id="genre" v-model="filter" @change="filterByGenre">
+                        <option value="0" selected>All genres</option>
+                        <option v-for="genre in genresList" :value="genre.id">
+                            {{genre.name.slice(0, 12)}}
+                            <span></span>
+                        </option>
+                    </select>
                 </li>
                 <!-- Barra di ricerca -->
                 <li class="search-box">
+
                     <i class="fas fa-search"></i>
                     <input type="text" v-model="search" @keydown.enter="searchFilm('movie'), searchFilm('tv')">
                 </li>
@@ -45,6 +53,149 @@
         <!-- Finestra principale con films/serie -->
         <main class="contentList">
             
+            
+            <!-- Film -->
+            <h2 class="section-title" v-if="searched == true && filmList.length > 0">Films</h2>
+            <h2 class="section-title" v-else-if="searched == true && filmList.length == 0">No films found</h2>
+            
+            <!-- Box film -->
+            <div v-for="film in films" class="filmBox" @mouseleave="cleanList()">
+                
+                <img class="cover" :src="film.poster_path != null ? 'https://image.tmdb.org/t/p/w500/' + film.poster_path : 'img/img-not-found.png'" alt="Cover film">
+                
+                <div class="overlay"></div>
+                
+                <!-- Lista absolute con i dati pricipali del film -->
+                <ul>
+                    <li>
+                    </li>
+                    <li>
+                        <h3>{{film.title}}</h3>
+                    </li>
+                    <li v-if="film.title != film.original_title">
+                        Original title: {{film.original_title}}
+                    </li>
+                    <li>
+                        <span class="language">
+                            Language:
+                        </span>
+                        <img class="flag" v-if="film.original_language == 'it'|| film.original_language == 'en'" :src="'img/flag-' + film.original_language + '.png'" alt="Flag"> 
+                        <span v-else class="language">
+                             {{film.original_language}}
+                            </span>
+                        </li>
+                        <li>
+                            <ul class="rating">
+                                <li class="star-full" v-for="star in film.vote_average">
+                                    <i class="fas fa-star fa-sm"></i>
+                                </li>
+                                <li class="star-empty" v-for="star in (5 - film.vote_average)">
+                                    <i class="far fa-star fa-sm"></i>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="overview" @click="actorsAndGenres(film.id, 'movie')">
+                        <span class="title">
+                            Overview: 
+                        </span>
+                        {{film.overview.slice(0, slicedWord)}}
+                        <span class="threepoint" v-if="film.overview.length > slicedWord">...</span>
+                        
+                        <span class="title">
+                            [More details] 
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+                        
+                        <!-- Lista absolute con i dati secondari del film -->
+                        <ul :class="show">
+                            <li class="title" v-if="nameList.length > 0">Actors: </li>
+                            <li v-if="nameList.length == 0 && genreList.length == 0">No details</li>
+                            <li v-for="(actor, index) in nameList">
+                                {{actor}} <span v-if="(nameList.length - 1) > index">,</span>
+                                &#160;
+                            </li>
+                            <li class="title" v-if="genreList.length > 0">Genres: </li>
+                            <li v-for="(genre, index) in genreList">
+                                {{genre}} <span v-if="(genreList.length - 1) > index">,</span>
+                                &#160;
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Serie -->
+            <h2 class="section-title" v-if="searched == true && serieList.length > 0">Series</h2>
+            <h2 class="section-title" v-else-if="searched == true && serieList.length == 0">No series found</h2>
+            
+            <!-- Box serie -->
+            <div v-for="serie in series" class="filmBox" @mouseleave="cleanList()">
+                <img class="cover" :src="serie.poster_path != null ? 'https://image.tmdb.org/t/p/w500/' + serie.poster_path : 'img/img-not-found.png'" alt="Cover film">
+                
+                <div class="overlay"></div>
+                
+                <!-- Lista absolute con i dati pricipali della serie -->
+                <ul>
+                    <li>
+                        <h3>{{serie.name}}</h3>
+                    </li>
+                    <li v-if="serie.name != serie.original_name">
+                        Original title: {{serie.original_name}}
+                    </li>
+                    <li>
+                        <span class="language">
+                            Language:
+                        </span>
+                        <img class="flag" v-if="serie.original_language == 'it'|| serie.original_language == 'en'" :src="'img/flag-' + serie.original_language + '.png'" alt="Flag"> 
+                        <span v-else class="language">
+                            {{serie.original_language}}
+                        </span>
+                    </li>
+                    <li>
+                        <ul class="rating">
+                            <li class="star-full" v-for="star in serie.vote_average">
+                                <i class="fas fa-star fa-sm"></i>
+                            </li>
+                            <li class="star-empty" v-for="star in (5 - serie.vote_average)">
+                                <i class="far fa-star fa-sm"></i>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="overview" @click="actorsAndGenres(serie.id, 'tv')">
+                        <!-- <template v-if=""> -->
+                            <span class="title">
+                                Overview: 
+                            </span>
+                            
+                            {{serie.overview.slice(0, slicedWord)}}
+                            
+                            <span class="threepoint" v-if="serie.overview.length > slicedWord">...</span>
+                            
+                            <span class="title">
+                                [More details] 
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                            
+                            <!-- Lista absolute con i dati secondari della serie -->
+                            <ul :class="show">
+                                <li class="title" v-if="nameList.length > 0">Actors: </li>
+                                <li v-if="nameList.length == 0 && genreList.length == 0">No details</li>
+                                <li v-for="(actor, index) in nameList">
+                                    {{actor}} <span v-if="(nameList.length - 1) > index">,</span>
+                                    &#160;
+                                </li>
+                                <li class="title" v-if="genreList.length > 0">Genres: </li>
+                                <li v-for="(genre, index) in genreList">
+                                    {{genre}} <span v-if="(genreList.length - 1) > index">,</span>
+                                    &#160;
+                                </li>
+                            </ul>
+                        <!-- </template> -->
+                    </li>
+                </ul>
+            </div>
+
             <!-- Popular -->
             <h2 class="section-title" v-if="popular.length > 0">Most popular films</h2>
 
@@ -111,148 +262,6 @@
                                 &#160;
                             </li>
                         </ul>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Film -->
-            <h2 class="section-title" v-if="searched == true && filmList.length > 0">Films</h2>
-            <h2 class="section-title" v-else-if="searched == true && filmList.length == 0">No films found</h2>
-
-            <!-- Box film -->
-            <div v-for="film in films" class="filmBox" @mouseleave="cleanList()">
-                
-                <img class="cover" :src="film.poster_path != null ? 'https://image.tmdb.org/t/p/w500/' + film.poster_path : 'img/img-not-found.png'" alt="Cover film">
-                
-                <div class="overlay"></div>
-
-                <!-- Lista absolute con i dati pricipali del film -->
-                <ul>
-                    <li>
-                    </li>
-                    <li>
-                       <h3>{{film.title}}</h3>
-                    </li>
-                    <li v-if="film.title != film.original_title">
-                        Original title: {{film.original_title}}
-                    </li>
-                    <li>
-                        <span class="language">
-                            Language:
-                        </span>
-                        <img class="flag" v-if="film.original_language == 'it'|| film.original_language == 'en'" :src="'img/flag-' + film.original_language + '.png'" alt="Flag"> 
-                        <span v-else class="language">
-                             {{film.original_language}}
-                        </span>
-                    </li>
-                    <li>
-                        <ul class="rating">
-                            <li class="star-full" v-for="star in film.vote_average">
-                                <i class="fas fa-star fa-sm"></i>
-                            </li>
-                            <li class="star-empty" v-for="star in (5 - film.vote_average)">
-                                <i class="far fa-star fa-sm"></i>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="overview" @click="actorsAndGenres(film.id, 'movie')">
-                        <span class="title">
-                            Overview: 
-                        </span>
-                        {{film.overview.slice(0, slicedWord)}}
-                        <span class="threepoint" v-if="film.overview.length > slicedWord">...</span>
-
-                        <span class="title">
-                            [More details] 
-                            <i class="fas fa-info-circle"></i>
-                        </span>
-
-                        <!-- Lista absolute con i dati secondari del film -->
-                        <ul :class="show">
-                            <li class="title" v-if="nameList.length > 0">Actors: </li>
-                            <li v-if="nameList.length == 0 && genreList.length == 0">No details</li>
-                            <li v-for="(actor, index) in nameList">
-                                {{actor}} <span v-if="(nameList.length - 1) > index">,</span>
-                                &#160;
-                            </li>
-                            <li class="title" v-if="genreList.length > 0">Genres: </li>
-                            <li v-for="(genre, index) in genreList">
-                                {{genre}} <span v-if="(genreList.length - 1) > index">,</span>
-                                &#160;
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Serie -->
-            <h2 class="section-title" v-if="searched == true && serieList.length > 0">Series</h2>
-            <h2 class="section-title" v-else-if="searched == true && serieList.length == 0">No series found</h2>
-
-            <!-- Box serie -->
-            <div v-for="serie in series" class="filmBox" @mouseleave="cleanList()">
-                <img class="cover" :src="serie.poster_path != null ? 'https://image.tmdb.org/t/p/w500/' + serie.poster_path : 'img/img-not-found.png'" alt="Cover film">
-                
-                <div class="overlay"></div>
-                
-                <!-- Lista absolute con i dati pricipali della serie -->
-                <ul>
-                    <li>
-                        <h3>{{serie.name}}</h3>
-                    </li>
-                    <li v-if="serie.name != serie.original_name">
-                        Original title: {{serie.original_name}}
-                    </li>
-                    <li>
-                        <span class="language">
-                            Language:
-                        </span>
-                        <img class="flag" v-if="serie.original_language == 'it'|| serie.original_language == 'en'" :src="'img/flag-' + serie.original_language + '.png'" alt="Flag"> 
-                        <span v-else class="language">
-                             {{serie.original_language}}
-                        </span>
-                    </li>
-                    <li>
-                        <ul class="rating">
-                            <li class="star-full" v-for="star in serie.vote_average">
-                                <i class="fas fa-star fa-sm"></i>
-                            </li>
-                            <li class="star-empty" v-for="star in (5 - serie.vote_average)">
-                                <i class="far fa-star fa-sm"></i>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="overview" @click="actorsAndGenres(serie.id, 'tv')">
-                        <template v-if="">
-                            <span class="title">
-                                Overview: 
-                            </span>
-    
-                            {{serie.overview.slice(0, slicedWord)}}
-    
-                            <span class="threepoint" v-if="serie.overview.length > slicedWord">...</span>
-    
-                            <span class="title">
-                                [More details] 
-                                <i class="fas fa-info-circle"></i>
-                            </span>
-    
-                            <!-- Lista absolute con i dati secondari della serie -->
-                            <ul :class="show">
-                                <li class="title" v-if="nameList.length > 0">Actors: </li>
-                                <li v-if="nameList.length == 0 && genreList.length == 0">No details</li>
-                                <li v-for="(actor, index) in nameList">
-                                    {{actor}} <span v-if="(nameList.length - 1) > index">,</span>
-                                    &#160;
-                                </li>
-                                <li class="title" v-if="genreList.length > 0">Genres: </li>
-                                <li v-for="(genre, index) in genreList">
-                                    {{genre}} <span v-if="(genreList.length - 1) > index">,</span>
-                                    &#160;
-                                </li>
-                            </ul>
-                        </template>
                     </li>
                 </ul>
             </div>
