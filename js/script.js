@@ -13,14 +13,19 @@ function martinosflix() {
             genreList: [], // Lista generi film/serie cliccata
             show: '', // classe display block
             slicedWord: 50, // lunghezza stringa overview
-            genresList: [], // Lisat generi
-            filteredFilms: [],
-            filteredSeries: [],
-            filter: 0
+            genresList: [], // Lista generi
+            OldFilmsList: [],
+            OldSeriesList: [],
+            oldPopularList: [],
+            filter: 0,// id filtro genere
+            counterFilter: 0, // contatore assegnamento filtro popolari
+            counterFilterFilm: 0
         },
         mounted: function () {
             // Richiamo la funzione film popolari a pagina montata
             this.getPopular();
+
+            // Inserisco in lista tutti i generi disponibili da API
             this.getGenres('movie');
             this.getGenres('tv');
         },
@@ -42,7 +47,10 @@ function martinosflix() {
             // Funzione ricerca film/serie
             searchFilm: function (type) {
                 if (this.search != '' && this.search[0] != ' ') {
-                    console.log("You've searcehd ("+ type + '): ' + this.search);
+                    console.log("You've searched ("+ type + '): ' + this.search);
+
+                    this.counterFilterFilm = 0;
+
                     // API ricerca film/serie per nome
                     axios.get('https://api.themoviedb.org/3/search/' + type,
                     {
@@ -61,9 +69,9 @@ function martinosflix() {
                         }
                         
                         this.popularFilm = []; 
-                        if (this.filmList.length < 1 && this.serieList.length < 1) {
-                            this.getPopular();
-                        }
+                        // if (this.filmList.length < 1 && this.serieList.length < 1) {
+                        //     this.getPopular();
+                        // }
 
                     }).catch(() => {
                         console.log('Error');
@@ -86,12 +94,11 @@ function martinosflix() {
                     }).catch(() => {
                         console.log('Error');
                 });   
-            }
-            ,
+            },
             // Lista generica copiata, con stelle in base 5
             arrayMap: function (arrayList) {
                 return arrayList.map((film) => {
-                    let stars = film.vote_average ;
+                    let stars = film.vote_average;
                     let rating = Math.round((5 * stars) / 10);
 
                     let newItem = {...film};
@@ -167,29 +174,54 @@ function martinosflix() {
                 });
             },
             filterByGenre: function () {
-                this.filteredFilms = this.filmList.filter(film => {
-                    if (this.filter == 0) {
-                        console.log('oooo');
-                        return film;
+                let loopList = [];
+
+                if (this.counterFilter == 0) {
+                    this.oldPopularList = [...this.popularFilm];
+                    this.counterFilter ++;
+                }
+
+                if (this.searched == true && this.counterFilterFilm == 0) {
+                    this.oldFilmList = [...this.filmList];
+                    this.counterFilterFilm ++;
+                }
+                
+                if (this.filter != 0) {
+                    if (this.searched) {
+                        loopList = [...this.oldFilmList];
+                        this.filterMethod(loopList, 'film');
+                    }else{
+                        loopList = [...this.oldPopularList];
+                        this.filterMethod(loopList, 'pop');
                     }
-                    else{
-                        let cont = 0;
-                        for (let i = 0; i < film.genre_ids.length; i++) {
-                            if (this.filter == film.genre_ids[i]) {
-                                console.log('genere', film.genre_ids[i]);
-                                cont++;
-                                break;
-                            }
-                        }
-                        console.log(cont);
-                        if (cont > 0) {
-                            console.log(film);
-                            return film;
-                        }
+                }else{
+                    if (this.searched == false) {
+                        this.popularFilm = [...this.oldPopularList];
+                    }else{
+                        this.filmList = [...this.oldFilmList];
                     }
-                    console.log(this.filter, film.genre_ids);
-                });
-                console.log(this.filteredFilms);
+                    // console.log(this.oldFilmList, this.filmList, this.popularFilm, this.oldPopularList);
+                }
+            },
+            filterMethod: function (loopList, caseType) {
+                let filtered = [];
+
+                for(const key in loopList) {
+                    for (let i = 0; i < loopList[key].genre_ids.length; i++) {
+                        if (this.filter == loopList[key].genre_ids[i]) {
+                            filtered.push(loopList[key]);
+                        }
+
+                    }
+                }
+                
+                if (caseType == 'pop') {
+                    this.popularFilm = [...filtered];
+                }else if(caseType == 'film'){
+                    this.filmList = [...filtered];
+                }
+
+                // console.log(this.oldFilmList, this.filmList, this.popularFilm, this.oldPopularList);
             }
         }
     });
