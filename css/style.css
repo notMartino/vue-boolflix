@@ -13,19 +13,38 @@ ul{
 #vue{
     overflow-x: hidden;
     font-family: 'Montserrat', sans-serif;
-    min-width: 500px;
+    min-width: 350px;
+}
+.separator{
+    width: 100%;
+    height: 0px;
+    background-color: white;
+    margin: 5px 0 10px !important;
+    border-top: 1px solid white;
+    border-radius: 1px;
+    outline: none;
+}
+.hidden{
+    display: none;
 }
 
 /* Proprietà header */
 header {
-    background-color: #141414;
     height: 100px;
+    width: 100%;
+    /* background-color: #141414; */
+    background-color: transparent;
     padding: 20px 50px;
     display: flex;
     align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 890;
+
 }
 
-/* Lista logo, links e barra di ricerca */
+/* Lista con logo, links e barra di ricerca */
 header ul{
     flex-basis: 100%;
     display: flex;
@@ -38,31 +57,32 @@ header li a{
     /* vertical-align: middle  ; */
 }
 
+/* Link box */
+.link-box{
+    display: flex;
+    align-items: center;
+}
 /* Logo */
 .link-box img{
     width: 160px;
     margin-right: 20px;
     /* vertical-align: middle; */
 }
-.link-box{
-    width: 450px;
-    display: flex;
-    align-items: center;
-}
-.link-box label{
-    margin-left: 15px;
-}
-.link-box select{
+/* Filtro genere */
+.link-box select, .hamburger select{
+    width: 130px;
     font-family: 'Montserrat', sans-serif;
     color: white;
     background-color: transparent;
     font-size: 16px;
     border: 0px solid transparent;
-    margin-left: 5px;
+    margin-left: 12px;
     padding-top: 1px;
     word-break: break-all;
+    outline: none;
+    appearance: none;
 }
-.link-box select option{
+.link-box select option, .hamburger select option{
     background-color: black;
 }
 
@@ -89,82 +109,273 @@ header li a{
     font-family: 'Montserrat', sans-serif;
     transition: width 1s, border-color 0.3s;
 }
-.search-box:hover input{
+.search-box:hover input, .search-box input:focus{
     background-color: #0f0f0f;
     width: 250px;
     border-color: grey;
 }
 
+.search-box .fa-bars{
+    cursor: pointer;
+    transition: text-shadow .3s;
+}
+.search-box .fa-bars:hover{
+    cursor: pointer;
+    text-shadow: 0px 0px 5px white;
+}
+
+/* Propreità hamburger menù */
+.hamburger{
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px 50px;
+    background-color: rgba(0, 0, 0, 1);
+    visibility: hidden;
+    position: fixed;
+    bottom: 100%;
+    z-index: 999;
+    transition: bottom .5s, visibility .5s;
+}
+.hamburger.active{
+    visibility: visible;
+    bottom: 0;
+}
+
+.hamburger i.fa-times{
+    position: absolute;
+    right: 29px;
+    top: 36px;
+    z-index: 10;
+    font-size: 23px;
+    cursor: pointer;
+}
+.hamburger img{
+    width: 200px;
+}
+.hamburger li{
+    margin-bottom: 15px;
+}
+.hamburger li a{
+    color: white;
+    text-decoration: none;
+}
+.hamburger select{
+    margin-left: 0;
+}
+
 /* Proprietà main */
+main{
+    overflow: hidden;
+    width: 100%;
+    /* padding-top: 100px; */
+    background-color: black;
+}
+
+/* Jumbotron */
+.jumbotron{
+    width: 100%;
+    /* height: 50vh; */
+    padding-top: 0;
+    height: 700px;
+    background-color: black;
+    overflow: hidden;
+    position: fixed;
+    z-index: 0;
+    opacity: 1;
+    transition: height .7s;
+}
+.jumbotron.hide{
+    height: 0px;
+    opacity: 0;
+}
+.jumbotron img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.jumbotron .jumbo-overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 500;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+.jumbotron .details{
+    position: absolute;
+    z-index: 600;
+    left: 40px;
+    bottom: 100px;
+    margin-right: 40px;
+}
+.jumbotron .details li:not(.jumbotron .details li:last-child){
+    margin-bottom: 5px;
+}
+.jumbotron .details h3, .title{
+    font-weight: 600;
+    color: white;
+}
+.jumbotron .details .title{
+    font-size: 13px;
+}
+.jumbotron .details .fa-star{
+    color: red;
+}
+.jumbotron .details .lefted{
+    margin-left: -3px;
+}
+.jumbotron .details .overview{
+    font-size: 13px;
+    text-align: justify;
+    max-width: 400px;
+    /* text-shadow: 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black; */
+}
+
 .contentList{
     min-height: calc(100vh - 100px);
-    padding: 30px 50px;
-    display: flex;
-    align-content: flex-start;
-    flex-wrap: wrap;
+    padding: 10px 50px 30px;
+    margin-top: 700px;
     background-color: black;
-    margin-right: -5px;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 0 50px 50px black;
+    transition: margin-top .7s;
+}
+.contentList.moved{
+    margin-top: 100px;
 }
 
 /* Titolo sezione (film/serie/popular) */
 .contentList .section-title{
     width: 100%;
-    margin: 30px 0 20px;
+    margin: 20px 0;
     font-size: 20px;
     font-weight: 400;
+}
+/* Lista film/serie */
+.contentList > ul{
+    width: auto;
+    margin: 0 -5px;
+    display: flex;
+    align-content: flex-start;
+    position: relative;
+    /* flex-wrap: wrap; */
+}
+
+/* Proprietà generali freccie scroll  */
+.contentList > ul .left-arrow, .contentList > ul .right-arrow{
+    position: absolute;
+    top: calc(50% - 25px);
+    z-index: 200;
+    transform: translateY(-50%);
+    font-size: 40px;
+    font-weight: lighter;
+    color: white;
+    text-shadow: 0px 0px 0px white;
+    cursor: pointer;
+    transition: text-shadow 0.2s;
+}
+.contentList > ul .left-arrow:hover, .contentList > ul .right-arrow:hover{
+    text-shadow: 0px 0px 5px white;
+}
+
+/* Freccia sx */
+.contentList > ul .left-arrow{
+    left: -30px;
+}
+/* Freccia dx */
+.contentList > ul .right-arrow{
+    right: -30px;
 }
 
 /* Film box */
 .filmBox{
-    flex-basis: calc((100% / 7) - 10px);
-    margin: 0 10px 50px 0;
     position: relative;
     font-size: 12px;
+    max-height: 350px;
+    cursor: pointer;
+    transition: transform 0.3s, left .8s, opacity 1.5s;
+    /* visibility: hidden; */
+    opacity: 0;
+    /* height: 0; */
+    flex-basis: 0px;
+    overflow: hidden;
+    left: 0%;
+}
+.filmBox:hover{
+    transform: scale(1.1);
+    z-index: 100;
+}
+
+/* Box visibili */
+.filmBox.active{
+    flex-basis: calc((100% / 7) - 10px);
+    height: auto;
+    visibility: visible;
+    opacity: 1;
+    margin: 0 5px 20px;
+}
+/* Box fuori range visibili con swipe (freiccia)*/
+.filmBox.right{
+    left: 100%;
+}
+.filmBox.left{
+    left: -100%;
 }
 
 /* Immagine copertina film/serie */
 .filmBox .cover{
     vertical-align: middle;
     width: 100%;
-    height: 300px;
+    height: 100%;
     object-fit: cover;
+    backface-visibility: hidden;
 }
 
-/* Dimensioni film box resposnsive */
-@media all and (max-width: 1499px) {
-    .filmBox{
-        flex-basis: calc((100% / 6) - 10px);
+/* Dimensioni film box responsive */
+@media all and (min-width: 1600px) {
+    .filmBox.active{
+        flex-basis: calc((100% / 8) - 10px);
+        /* min-height: 300px; */
     }
-    .filmBox .cover{
-        height: 280px;
+}
+@media all and (max-width: 1499px) {
+    .filmBox.active{
+        flex-basis: calc((100% / 6) - 10px);
     }
 }
 @media all and (max-width: 1199px) {
-    .filmBox{
+    .filmBox.active{
         flex-basis: calc((100% / 4) - 10px);
-    }
-    .filmBox .cover{
-        height: 280px;
     }
 }
 @media all and (max-width: 767px) {
-    .filmBox{
+    .filmBox.active{
         flex-basis: calc((100% / 3) - 10px);
-    }
-    .filmBox .cover{
-        height: 200px;
     }
 }
 @media all and (max-width: 575px) {
     .contentList{
         justify-content: center;
+        padding: 30px 30px;
     }
-    .filmBox{
-        flex-basis: calc((70% / 1) - 10px);
-        min-width: 300px;
+    .contentList > ul{
+        flex-wrap: wrap;
     }
-    .filmBox .cover{
-        height: 400px;
+    .contentList > ul .left-arrow, .contentList > ul .right-arrow{
+        display: none;
+    }
+    .filmBox.active{
+        flex-basis: calc((100% / 1) - 10px);
+        min-width: 50px;
+        min-height: 700px;
+        margin-bottom: 30px;
+    }
+    .filmBox:hover{
+        transform: none;
+        z-index: 1;
     }
     .search-box:hover input{
         width: 150px;
@@ -176,8 +387,8 @@ header li a{
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 100;
-    width: 100%;
+    z-index: 110;
+    width: 105%;
     height: 100%;
     background-color: black;
     opacity: 0;
@@ -189,13 +400,14 @@ header li a{
     width: 100%;
     max-height: 100%;
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
     z-index: 200;
     opacity: 0;
-    padding: 20px 10px;
+    padding: 10px;
     transition: opacity 0.2s linear;
     overflow-y: auto;
+    text-align: justify;
 
     /* scroll bar invisibile */
     -ms-overflow-style: none;  /* IE and Edge */
@@ -205,65 +417,182 @@ header li a{
 .filmBox > ul::-webkit-scrollbar {
     display: none;
 }
+.filmBox > ul h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    cursor: default;
+    text-align: center;
+}
+
 .filmBox:hover ul{
     opacity: 1;
 }
 .filmBox:hover .overlay{
     opacity: 0.7;
 }
-    
-/* Bandiera/Codice lingua */
-.filmBox .flag{
-    height: 14px;
-    vertical-align: middle;
-}
-.filmBox .language{
-    vertical-align: middle;
-}
-
-/* Valutazione 5 stelle film/serie */
-.filmBox .rating li{
-    display: inline-block;
-    margin: 5px 0;
-}
-.rating .star-full + .star-empty{
-    margin-left: -3px;
-}
-.rating i {
-    color: red;
-}
 
 /* Descrizione film */
-.filmBox .overview{
+.filmBox .description{
     position: relative;
-    cursor: pointer;
-    font-size: 11px;
-    line-height: 11px;
-}
-.filmBox .overview ul{
-    display: none;
+    font-size: 10px;
+    line-height: 10px;
+    font-weight: 600;
 }
 
 /* Classe per rendere visibili i dettegli descrizione film */
 .show{
     display: block!important;
 } 
-
 /* Puntini di sospensione a overview troncata */
 .threepoint{
     margin-left: -3px;
 }
 
-/* Titoletti in rosso */
-.overview .title{
+/* Modal Window */
+.modal-box{
+    position: fixed;
+    z-index: 900;
+    display: flex;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.9);
+    visibility: hidden;
+    opacity: 0;
+}
+.modal-box.active{
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Box dettaglio con trailer */
+.modal-box .details-box{
+    margin: auto;
+    flex-basis: 55%;
+    background-color: black;
+    height: 500px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 20px -10px rgb(143, 143, 143);
+}
+/* Video trailer */
+.modal-box .details-box iframe{
+    vertical-align: middle;
+    width: 100%;
+    height: 620px;
+    display: none;
+    position: relative;
+    top: -60px;
+}
+.modal-box .details-box iframe.active{
     display: block;
-    font-weight: 400;
+}
+
+/* Cover img no video */
+.modal-box .details-box .img-cover{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Overlay video-frame */
+.modal-box .overlay-video{
+    width: 100%;
+    height: 100%;
+    padding: 20px 15px;
+    background-color: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+/* Bottone per uscire da modale */
+.modal-box .overlay-video i.fa-times{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 10;
+    font-size: 20px;
+    cursor: pointer;
+}
+/* Lista dettagli modale */
+.modal-box .overlay-video ul{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+}
+
+/* List items escluso ultimo */
+.modal-box .overlay-video li:not(.modal-box .details-box .overlay-video li:last-child) {
+    margin-bottom: 7px;
+}
+
+.modal-box .overlay-video .title h2{
+    font-weight:600;
+    font-size: 20px;
+}
+
+/* Descrizione film in modale */
+.modal-box .overlay-video .overview{
+    font-size: 12px;
+    text-align: justify;
+    text-shadow: 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black;
+}
+
+/* Rating stelle */
+.modal-box .overlay-video .rating i {
     color: red;
 }
-.overview .title i{
-    vertical-align: middle;
-    font-size: 14px;
+/* Rating stelle vuote */
+.modal-box .overlay-video .rating .lefted{
+    position: relative;
+    left: -3px;
 }
-.overview ul li{
+
+/* Bandiera/Codice lingua */
+.modal-box .flag{
+    height: 14px;
+    vertical-align: middle;
+    margin-left: 3px;
+}
+.modal-box .overlay-video .language{
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.modal-box .title{
+    vertical-align: middle;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Tag genere */
+.modal-box .genre-tag{
     display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-right: 5px;
+    font-size: 12px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+
+@media all and (max-width: 1199px) {
+    .modal-box .details-box{
+        flex-basis: 80%;
+    }
+}
+@media all and (max-width: 767px) {
+    .modal-box .details-box{
+        flex-basis: 95%;
+        height: 600px;
+    }
+    .modal-box .details-box iframe{
+        height: 720px;
+    }
 }

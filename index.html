@@ -30,239 +30,252 @@
                 <!-- Logo e Home link -->
                 <li class="link-box">
                     <a href="index.html">
-                        <img src="img/netflix-logo.png" alt="Netflix Logo">
+                        <img src="img/notflix-logo.png" alt="Netflix Logo">
                     </a>
-                    <a href="index.html">Home</a>
-                    <select name="genre" id="genre" v-model="filter" @change="filterByGenre">
-                        <option value="0" selected>All genres</option>
+
+                    <a href="index.html" :class="viewWidth < 768 ? 'hidden' : ''">Home</a>
+
+                    <select name="genre" id="genre"  :class="viewWidth < 768 ? 'hidden' : ''" v-model="filter" @change="filterByGenre">
+                        <option value="0" selected>
+                            All genres &#129171;
+                            <!-- &#129171; -->
+                        </option>
                         <option v-for="genre in genresList" :value="genre.id">
-                            {{genre.name.slice(0, 12)}}
-                            <span></span>
+                            <!-- {{genre.name.slice(0, 12)}} -->
+                            {{genre.name}}
                         </option>
                     </select>
                 </li>
+
                 <!-- Barra di ricerca -->
                 <li class="search-box">
+                    <i class="fas fa-search" :class="viewWidth < 768 ? 'hidden' : ''"></i>
+                    <input type="text" :class="viewWidth < 768 ? 'hidden' : ''" v-model="search" @keydown.enter="searchFilm('movie'), searchFilm('tv')">
 
+                    <i class="fas fa-bars" :class="viewWidth > 767 ? 'hidden' : ''" @click="hamburgerMenu()"></i>
+                </li>
+            </ul>
+
+        </header>
+        
+        <!-- Hamburger menu -->
+        <div class="hamburger" :class="activeHamburger ? 'active' : ''">
+            <i class="fas fa-times" @click="hamburgerMenu()"></i>
+
+            <ul>
+                <li>
+                    <a href="index.html">
+                        <img src="img/notflix-logo.png" alt="Netflix Logo">
+                    </a>
+                </li>
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+                <li>
+                    <select name="genre" id="genre" v-model="filter" @change="filterByGenre">
+                        <option value="0" selected>
+                            All genres &#129171;
+                            <!-- &#129171; -->
+                        </option>
+                        <option v-for="genre in genresList" :value="genre.id">
+                            <!-- {{genre.name.slice(0, 12)}} -->
+                            {{genre.name}}
+                        </option>
+                    </select>
+                </li>
+
+                <li class="search-box">
                     <i class="fas fa-search"></i>
                     <input type="text" v-model="search" @keydown.enter="searchFilm('movie'), searchFilm('tv')">
                 </li>
             </ul>
-        </header>
-        
+        </div>
+
         <!-- Finestra principale con films/serie -->
-        <main class="contentList">
-            
-            
-            <!-- Film -->
-            <h2 class="section-title" v-if="searched == true && filmList.length > 0">Films</h2>
-            <h2 class="section-title" v-else-if="searched == true && filmList.length == 0">No films found</h2>
-            
-            <!-- Box film -->
-            <div v-for="film in films" class="filmBox" @mouseleave="cleanList()">
-                
-                <img class="cover" :src="film.poster_path != null ? 'https://image.tmdb.org/t/p/w500/' + film.poster_path : 'img/img-not-found.png'" alt="Cover film">
-                
-                <div class="overlay"></div>
-                
-                <!-- Lista absolute con i dati pricipali del film -->
-                <ul>
-                    <li>
-                    </li>
-                    <li>
-                        <h3>{{film.title}}</h3>
-                    </li>
-                    <li v-if="film.title != film.original_title">
-                        Original title: {{film.original_title}}
-                    </li>
-                    <li>
-                        <span class="language">
-                            Language:
-                        </span>
-                        <img class="flag" v-if="film.original_language == 'it'|| film.original_language == 'en'" :src="'img/flag-' + film.original_language + '.png'" alt="Flag"> 
-                        <span v-else class="language">
-                             {{film.original_language}}
+        <main>
+
+            <section class="jumbotron" :class="searched || filter ? 'hide' : ''">
+                <img class="cover" :src="films[4].backdrop_path != null ? 'https://image.tmdb.org/t/p/original/' + films[4].backdrop_path : 'img/img-not-found.png'" alt="Cover film">
+
+                <div class="jumbo-overlay"></div>
+
+                <div class="details">
+                    <ul>
+                        <li>
+                            <h3>
+                                {{films[4].title}}
+                            </h3>
+                        </li>
+                        <li class="rating">
+                            <span class="star-full" v-for="star in films[4].vote_average">
+                                <i class="fas fa-star fa-sm"></i>
+                            </span>
+
+                            <span class="lefted" v-for="star in (5 - films[4].vote_average)">
+                                <i class="far fa-star fa-sm"></i>
                             </span>
                         </li>
-                        <li>
-                            <ul class="rating">
-                                <li class="star-full" v-for="star in film.vote_average">
-                                    <i class="fas fa-star fa-sm"></i>
-                                </li>
-                                <li class="star-empty" v-for="star in (5 - film.vote_average)">
-                                    <i class="far fa-star fa-sm"></i>
-                            </li>
-                        </ul>
+                        <li class="overview">
+                            {{ films[4].overview}}
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="contentList" :class="searched || filter ? 'moved' : ''">
+
+                <!-- Film -->
+                <h2 class="section-title" v-if="searched && filmList.length > 0">Films found</h2>
+                <h2 class="section-title" v-else-if="filmList.length == 0">No films found</h2>
+                <h2 class="section-title" v-else>Popular Films</h2>
+                
+                <!-- Box film -->
+                <ul>
+                    <!-- Freccia sx -->
+                    <li class="left-arrow" v-if="carouselFilmsIndex - carouselItems != 0" @click="films[carouselFilmsIndex - carouselItems - 1] != undefined ? swipeLeftFilms() : ''">
+                        <i class="fas fa-chevron-left"></i>
+                    </li>
+                    <!-- Freccia dx -->
+                    <li class="right-arrow" v-if="carouselFilmsIndex < films.length && films[carouselFilmsIndex + 1] != undefined" @click="films[carouselFilmsIndex + 1] != undefined ? swipeRightFilms() : ''">
+                        <i class="fas fa-chevron-right"></i>
                     </li>
 
-                    <li class="overview" @click="actorsAndGenres(film.id, 'movie')">
-                        <span class="title">
-                            Overview: 
-                        </span>
-                        {{film.overview.slice(0, slicedWord)}}
-                        <span class="threepoint" v-if="film.overview.length > slicedWord">...</span>
+                    <!-- BOX -->
+                    <li v-for="(film, index) in films" class="filmBox" :class="filmBoxClasses(index)" @click="modalView(film, 'movie')">
+
+                        <!-- Immagine di copertina -->
+                        <img class="cover" :src="film.poster_path != null ? 'https://image.tmdb.org/t/p/w780/' + film.poster_path : 'img/img-not-found.png'" alt="Cover film">
                         
-                        <span class="title">
-                            [More details] 
-                            <i class="fas fa-info-circle"></i>
-                        </span>
+                        <div class="overlay"></div>
                         
-                        <!-- Lista absolute con i dati secondari del film -->
-                        <ul :class="show">
-                            <li class="title" v-if="nameList.length > 0">Actors: </li>
-                            <li v-if="nameList.length == 0 && genreList.length == 0">No details</li>
-                            <li v-for="(actor, index) in nameList">
-                                {{actor}} <span v-if="(nameList.length - 1) > index">,</span>
-                                &#160;
+                        <!-- Lista absolute con i dati pricipali del film -->
+                        <ul>
+                            <!-- Titolo -->
+                            <li>
+                                <h3>{{film.title}}</h3>
                             </li>
-                            <li class="title" v-if="genreList.length > 0">Genres: </li>
-                            <li v-for="(genre, index) in genreList">
-                                {{genre}} <span v-if="(genreList.length - 1) > index">,</span>
-                                &#160;
+
+                            <!-- Descrizione -->
+                            <li class="description">
+                                {{film.overview.slice(0, 300)}}
+                                <span class="threepoint" v-if="film.overview.length > 300">...</span>
                             </li>
                         </ul>
                     </li>
                 </ul>
-            </div>
-            
-            <!-- Serie -->
-            <h2 class="section-title" v-if="searched == true && serieList.length > 0">Series</h2>
-            <h2 class="section-title" v-else-if="searched == true && serieList.length == 0">No series found</h2>
-            
-            <!-- Box serie -->
-            <div v-for="serie in series" class="filmBox" @mouseleave="cleanList()">
-                <img class="cover" :src="serie.poster_path != null ? 'https://image.tmdb.org/t/p/w500/' + serie.poster_path : 'img/img-not-found.png'" alt="Cover film">
                 
-                <div class="overlay"></div>
+                <!-- Serie -->
+                <h2 class="section-title" v-if="searched && serieList.length > 0">Series found</h2>
+                <h2 class="section-title" v-else-if="serieList.length == 0">No series found</h2>
+                <h2 class="section-title" v-else>Popular Series</h2>
                 
-                <!-- Lista absolute con i dati pricipali della serie -->
+                <!-- Box serie -->
                 <ul>
-                    <li>
-                        <h3>{{serie.name}}</h3>
+                    <!-- Freccia sx -->
+                    <li class="left-arrow" v-if="carouselSeriesIndex - carouselItems != 0" @click="series[carouselSeriesIndex - carouselItems - 1] != undefined ? swipeLeftSeries() : ''">
+                        <i class="fas fa-chevron-left"></i>
                     </li>
-                    <li v-if="serie.name != serie.original_name">
-                        Original title: {{serie.original_name}}
+                    <!-- Freccia dx -->
+                    <li class="right-arrow" v-if="carouselSeriesIndex < series.length && series[carouselSeriesIndex + 1] != undefined" @click="series[carouselSeriesIndex + 1] != undefined ? swipeRightSeries() : ''">
+                        <i class="fas fa-chevron-right"></i>
                     </li>
-                    <li>
-                        <span class="language">
-                            Language:
-                        </span>
-                        <img class="flag" v-if="serie.original_language == 'it'|| serie.original_language == 'en'" :src="'img/flag-' + serie.original_language + '.png'" alt="Flag"> 
-                        <span v-else class="language">
-                            {{serie.original_language}}
-                        </span>
-                    </li>
-                    <li>
-                        <ul class="rating">
-                            <li class="star-full" v-for="star in serie.vote_average">
-                                <i class="fas fa-star fa-sm"></i>
+
+                    <!-- BOX -->
+                    <li v-for="(serie, index) in series" class="filmBox" :class="serieBoxClasses(index)" @click="modalView(serie, 'tv')">
+
+                        <!-- Immagine di copertina -->
+                        <img class="cover" :src="serie.poster_path != null ? 'https://image.tmdb.org/t/p/w780/' + serie.poster_path : 'img/img-not-found.png'" alt="Cover film">
+                        
+                        <div class="overlay"></div>
+                        
+                        <!-- Lista absolute con i dati pricipali della serie -->
+                        <ul>
+                            <!-- Titolo -->
+                            <li>
+                                <h3>{{serie.name}}</h3>
                             </li>
-                            <li class="star-empty" v-for="star in (5 - serie.vote_average)">
-                                <i class="far fa-star fa-sm"></i>
+                            <!-- Descrizione -->
+                            <li class="description">
+                                {{serie.overview.slice(0, 300)}}
+                                <span class="threepoint" v-if="serie.overview.length > 300">...</span>
                             </li>
                         </ul>
                     </li>
-                    <li class="overview" @click="actorsAndGenres(serie.id, 'tv')">
-                        <!-- <template v-if=""> -->
-                            <span class="title">
-                                Overview: 
-                            </span>
-                            
-                            {{serie.overview.slice(0, slicedWord)}}
-                            
-                            <span class="threepoint" v-if="serie.overview.length > slicedWord">...</span>
-                            
-                            <span class="title">
-                                [More details] 
-                                <i class="fas fa-info-circle"></i>
-                            </span>
-                            
-                            <!-- Lista absolute con i dati secondari della serie -->
-                            <ul :class="show">
-                                <li class="title" v-if="nameList.length > 0">Actors: </li>
-                                <li v-if="nameList.length == 0 && genreList.length == 0">No details</li>
-                                <li v-for="(actor, index) in nameList">
-                                    {{actor}} <span v-if="(nameList.length - 1) > index">,</span>
-                                    &#160;
+                </ul>
+    
+                <!-- Modal box -->
+                <div class="modal-box" :class="modalActive ? 'active' : ''">
+                    <div class="details-box">
+                        <!-- Video frame -->
+                        <iframe :class="videoActive ? 'active' : ''" v-if="videoActive" :src="'https://www.youtube-nocookie.com/embed/' + videoLink + '?&autoplay=1&playsinline=1&cc_load_policy=0&mute=1&controls=0&loop=1&showinfo=0&playlist=' + videoLink" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; modestbranding;"></iframe>
+
+                        <!-- <img class="img-cover" v-else :src="imageLink != '' ? 'https://image.tmdb.org/t/p/original/' + imageLink : 'img/img-not-found.png'" alt="Poster Image"> -->
+                        <img class="img-cover" v-else :src="imageLink != '' ? 'https://image.tmdb.org/t/p/original/' + imageLink : 'img/transparent.png'">
+
+                        <!-- Video overlay -->
+                        <div class="overlay-video">
+                            <i class="fas fa-times" @click="closeModalView()"></i>
+                            <ul>
+                                <li class="title">
+                                    <h2 v-if="modalItem.title">
+                                        {{modalItem.title}}
+                                    </h2>
+                                    <h2 v-else>
+                                        {{modalItem.name}}
+                                    </h2>
                                 </li>
-                                <li class="title" v-if="genreList.length > 0">Genres: </li>
-                                <li v-for="(genre, index) in genreList">
-                                    {{genre}} <span v-if="(genreList.length - 1) > index">,</span>
-                                    &#160;
+
+                                <li class="rating">
+                                        <span class="star-full" v-for="star in modalItem.vote_average">
+                                            <i class="fas fa-star fa-sm"></i>
+                                        </span>
+
+                                        <template v-if="'overview' in modalItem">
+                                            <span class="lefted" v-for="star in (5 - modalItem.vote_average)">
+                                                <i class="far fa-star fa-sm"></i>
+                                            </span>
+                                        </template>
+                                </li>
+
+                                <li>
+                                    <span class="title">
+                                         Original language:
+                                    </span>
+                                    <img class="flag" v-if="modalItem.original_language == 'it'|| modalItem.original_language == 'en'" :src="'img/flag-' + modalItem.original_language + '.png'" alt="Flag"> 
+                                    <span class="language" v-else>
+                                         {{modalItem.original_language}}
+                                    </span>
+                                </li>
+
+                                <li>
+                                    <span class="title">
+                                        Actors:
+                                    </span>
+                                    <span class="overview">
+                                        <template v-for="(actor, index) in nameList">
+                                            {{actor}} <span v-if="(nameList.length - 1) != index">-</span>
+                                        </template>
+                                    </span>
+                                </li>
+
+                                <li>
+                                    <span class="genre-tag" v-for="(genre, index) in genreList">
+                                        {{genre}}
+                                    </span>
+                                </li>
+
+                                <li class="separator" v-if="modalItem.overview"></li>
+
+                                <li>
+                                    <span class="overview">
+                                        {{modalItem.overview}}
+                                    </span>
                                 </li>
                             </ul>
-                        <!-- </template> -->
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Popular -->
-            <h2 class="section-title" v-if="popular.length > 0">Most popular films</h2>
-            <h2 class="section-title" v-else-if="searched == false && popular.length == 0">No popoular films found</h2>
-            <!-- Box film -->
-            <div v-for="film in popular" class="filmBox" @mouseleave="cleanList()">
-
-                <img class="cover" :src="film.poster_path != null ? 'https://image.tmdb.org/t/p/w500/' + film.poster_path : 'img/img-not-found2.png'" alt="Cover film">
-                
-                <div class="overlay"></div>
-
-                <!-- Lista absolute con i dati pricipali del film -->
-                <ul>
-                    <li>
-                       <h3>{{film.title}}</h3>
-                    </li>
-                    <li v-if="film.title != film.original_title">
-                        Original title: {{film.original_title}}
-                    </li>
-                    <li>
-                        <span class="language">
-                            Language:
-                        </span>
-                        <img class="flag" v-if="film.original_language == 'it'|| film.original_language == 'en'" :src="'img/flag-' + film.original_language + '.png'" alt="Flag"> 
-                        <span v-else class="language">
-                             {{film.original_language}}
-                        </span>
-                    </li>
-                    <li>
-                        <ul class="rating">
-                            <li class="star-full" v-for="star in film.vote_average">
-                                <i class="fas fa-star fa-sm"></i>
-                            </li>
-                            <li class="star-empty" v-for="star in (5 - film.vote_average)">
-                                <i class="far fa-star fa-sm"></i>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="overview" @click="actorsAndGenres(film.id, 'movie')">
-                        <span class="title">
-                            Overview: 
-                        </span>
-                        {{film.overview.slice(0, slicedWord)}}
-                        <span class="threepoint" v-if="film.overview.length > slicedWord">...</span>
-                        
-                        <span class="title">
-                            [More details] 
-                            <i class="fas fa-info-circle"></i>
-                        </span>
-                        
-                        <!-- Lista absolute con i dati secondari del film -->
-                        <ul :class="show">
-                            <li class="title" v-if="nameList.length > 0">Actors: </li>
-                            <li v-if="nameList.length == 0 && genreList.length == 0">No details</li>
-                            <li v-for="(actor, index) in nameList">
-                                {{actor}} <span v-if="(nameList.length - 1) > index">,</span>
-                                &#160;
-                            </li>
-                            <li class="title" v-if="genreList.length > 0">Genres: </li>
-                            <li v-for="(genre, index) in genreList">
-                                {{genre}} <span v-if="(genreList.length - 1) > index">,</span>
-                                &#160;
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
 
     </div>
