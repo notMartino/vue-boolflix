@@ -100,6 +100,7 @@ function martinosflix() {
                     let stars = film.vote_average;
                     let rating = Math.round((5 * stars) / 10);
     
+                    // console.log(this.jumbofilm == false);
                     let newItem = {...film};
                     newItem.vote_average = rating;
                     return newItem;

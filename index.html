@@ -94,8 +94,8 @@
         <!-- Finestra principale con films/serie -->
         <main>
 
-            <section class="jumbotron" :class="searched || filter ? 'hide' : ''">
-                <img class="cover" :src="films[4].backdrop_path != null ? 'https://image.tmdb.org/t/p/original/' + films[4].backdrop_path : 'img/img-not-found.png'" alt="Cover film">
+            <section class="jumbotron" v-if="!filter" :class="searched || filter ? 'hide' : ''">
+                <img class="cover" :src="films[6].backdrop_path != null ? 'https://image.tmdb.org/t/p/original/' + films[6].backdrop_path : 'img/img-not-found.png'" alt="Cover film">
 
                 <div class="jumbo-overlay"></div>
 
@@ -103,20 +103,20 @@
                     <ul>
                         <li>
                             <h3>
-                                {{films[4].title}}
+                                {{films[6].title}}
                             </h3>
                         </li>
                         <li class="rating">
-                            <span class="star-full" v-for="star in films[4].vote_average">
+                            <span class="star-full" v-for="star in films[6].vote_average">
                                 <i class="fas fa-star fa-sm"></i>
                             </span>
 
-                            <span class="lefted" v-for="star in (5 - films[4].vote_average)">
+                            <span class="lefted" v-for="star in (5 - films[6].vote_average)">
                                 <i class="far fa-star fa-sm"></i>
                             </span>
                         </li>
                         <li class="overview">
-                            {{ films[4].overview}}
+                            {{ films[6].overview}}
                         </li>
                     </ul>
                 </div>
